@@ -1,10 +1,18 @@
 on: [push, pull_request]
 name: Roave
+permissions:
+  contents: read
+
 jobs:
   roave_bc_check:
     name: BC Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@58077d3c7e43986b6b15fba718e8ea69e387dfcc # v2.15.1
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@61b9e3751b92087fd0b06925ba6dd6314e06f089 # master
       - name: Roave BC Check
-        uses: docker://nyholm/roave-bc-check-ga
+        uses: docker://nyholm/roave-bc-check-ga:latest@sha256:a9d3d932a4d3ba6a5a0563ef3788918a538198ee9c061a153f9b55caa8d3625f
